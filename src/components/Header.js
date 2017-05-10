@@ -2,8 +2,12 @@ import React from 'react';
 
 class Header extends React.Component {
 	render(){
+		console.log(this);
 		return(
-				<p>Header</p>
+				<header className="top">
+				<h1>Catch of the Day</h1>
+				<h3 className="tagline">{this.props.tagline}</h3>
+				</header>
 			);
 	}
 }
