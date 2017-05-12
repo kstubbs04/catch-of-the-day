@@ -11,6 +11,20 @@ class App extends React.Component {
 			fishes: {},
 			order: {}
 		};
+		this.addFish = this.addFish.bind(this);
+	}
+
+	addFish(fish){
+		//copy current states
+		const fishes = {...this.state.fishes};
+
+		//add new fish
+		const timestamp = Date.now();
+		fishes[`fish-${timestamp}`] = fish;
+
+		//set state
+		this.setState({fishes: fishes});
+
 	}
 
 	render(){
@@ -20,7 +34,7 @@ class App extends React.Component {
 					<Header tagline="Fresh Seafod Market"/>
 				</div>
 				<Order/>
-				<Inventory/>
+				<Inventory addFish={this.addFish}/>
 			</div>
 		)
 	}
