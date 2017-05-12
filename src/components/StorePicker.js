@@ -9,11 +9,11 @@ class StorePicker extends React.Component {
 		event.preventDefault();
 		
 		//Grab text box value
-		console.log(this.storeInput.value);	
+		const storeId = this.storeInput.value;;	
 
 
 		//Update Url and Redirect
-
+		this.context.router.transitionTo(`/store/${storeId}`);
 
 	}
 
@@ -27,6 +27,11 @@ class StorePicker extends React.Component {
 			</form>
         )
     }
+}
+
+//Surface Router for page redirect
+StorePicker.contextTypes = {
+	router: React.PropTypes.object
 }
 
 export default StorePicker;
