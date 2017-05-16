@@ -1,5 +1,6 @@
 import React from 'react';
 import AddFishForm from './AddFishForm';
+import base from '../Base';
 
 class Inventory extends React.Component {
 
@@ -7,12 +8,41 @@ class Inventory extends React.Component {
 		super();
 		this.handleChange = this.handleChange.bind(this);
 		this.renderInventory = this.renderInventory.bind(this);
+		this.renderLogin = this.renderLogin.bind(this);
+		this.authenticate = this.authenticate.bind(this);
+		this.authHandler = this.authHandler.bind(this);
+
+		this.state = {
+			uid: null, 
+			owner: null
+		}
 	}
 
 	handleChange(e, key){
 		const fish = this.props.fishes[key];
 		const updatedFish = {...fish, [e.target.name]:e.target.value}
 		this.props.updateFish(key, updatedFish);
+	}
+
+	authenticate(provider){
+		console.log(`trying to authenticate with ${provider}`)
+		base.authWithOAuthPopup(provider, this.authHandler);
+	}
+
+	authHandler(err, authData){
+		console.log(authData);
+	}
+
+	renderLogin(){
+		return(
+			<nav className="login">
+		        <h2>Inventory</h2>
+		        <p>Sign in to manage your store's inventory</p>
+		        <button className="github" onClick={() => this.authenticate('github')}>Log In with Github</button>
+		        <button className="facebook" onClick={() => this.authenticate('facebook')} >Log In with Facebook</button>
+		        <button className="twitter" onClick={() => this.authenticate('twitter')} >Log In with Twitter</button>
+		    </nav>
+      	)
 	}
 
 	renderInventory(key){
@@ -39,6 +69,22 @@ class Inventory extends React.Component {
 	}
 
 	render (){
+
+		const logout = <button>Log Out !</button>;
+
+		//Verify not login
+		if(!this.state.uid){
+			return <div>{this.renderLogin()}</div>
+		}
+
+		if(this.state.uid !== this.state.owner){
+			return (
+				<div>
+					<p>Sorry you aren't the owner of this store!</p>
+				</div>
+				)
+		}
+
 		return (
 			<div>
 				<p>Inventory</p>
