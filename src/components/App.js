@@ -4,6 +4,7 @@ import Order from './Order';
 import Inventory from './Inventory';
 import Fish from './Fish';
 import sampleFishes from '../sample-fishes';
+import base from '../Base';
 
 
 class App extends React.Component {
@@ -17,6 +18,35 @@ class App extends React.Component {
 		this.addFish = this.addFish.bind(this);
 		this.loadSamples = this.loadSamples.bind(this);
 		this.addToOrder = this.addToOrder.bind(this);
+		this.updateFish = this.updateFish.bind(this);
+		this.removeFish = this.removeFish.bind(this);
+		this.removeFromOrder = this.removeFromOrder.bind(this);
+	}
+
+	componentWillMount(){
+		const db = `${this.props.params.storeId}/fishes`;
+		this.ref = base.syncState(db,
+		{
+			context: this,
+			state: 'fishes'
+		});
+
+		const localStorageKey = `order-${this.props.params.storeId}`;
+		const keyIsPresent = localStorage.getItem(localStorageKey);
+
+		if(keyIsPresent){
+			this.setState({
+				order: JSON.parse(keyIsPresent)
+			});
+		}
+	}
+
+	componentWillUnmount(){
+		base.removeBinding(this.ref);
+	}
+
+	componentWillUpdate(nextProps, nextState){
+		localStorage.setItem(`order-${this.props.params.storeId}`, JSON.stringify(nextState.order));
 	}
 
 	loadSamples(){
@@ -37,11 +67,34 @@ class App extends React.Component {
 		this.setState({fishes: fishes});
 	}
 
+	updateFish(key, updatedFish){
+
+		const fishes = {...this.state.fishes};
+		fishes[key] = updatedFish;
+		this.setState({
+			fishes:fishes
+		});
+	}
+
+	removeFish(key){
+		const fishes = {...this.state.fishes};
+		fishes[key] = null;
+		this.setState({
+			fishes:fishes
+		});	
+	}
+
 	addToOrder(key){
 		const order = {...this.state.order};
 
 		order[key] = order[key] + 1 || 1;
 
+		this.setState({order: order});
+	}
+
+	removeFromOrder(key){
+		const order = {...this.state.order};
+		delete order[key];
 		this.setState({order: order});
 	}
 
@@ -55,11 +108,16 @@ class App extends React.Component {
 							.map(key => <Fish key={key} index={key} details={this.state.fishes[key]} addToOrder={this.addToOrder}/>)}
 					</ul>
 				</div>
-				<Order fishes={this.state.fishes} order={this.state.order}/>
-				<Inventory addFish={this.addFish} loadSamples={this.loadSamples} addToOrder={this.addToOrder}/>
+				<Order fishes={this.state.fishes} order={this.state.order} params={this.props.params} removeFromOrder={this.removeFromOrder}/>
+				<Inventory storeId={this.props.params.storeId} removeFish={this.removeFish} updateFish={this.updateFish} addFish={this.addFish} loadSamples={this.loadSamples} addToOrder={this.addToOrder} fishes={this.state.fishes} />
 			</div>
 		)
 	}
+}
+const Types = React.PropTypes;
+
+App.propTypes = {
+	params: Types.object.isRequired,
 }
 
 export default App;
