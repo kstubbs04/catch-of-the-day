@@ -11,11 +11,20 @@ class Inventory extends React.Component {
 		this.renderLogin = this.renderLogin.bind(this);
 		this.authenticate = this.authenticate.bind(this);
 		this.authHandler = this.authHandler.bind(this);
+		this.logout = this.logout.bind(this);
 
 		this.state = {
 			uid: null, 
 			owner: null
 		}
+	}
+
+	componentDidMount(){
+		base.onAuth((user)=>{
+			if(user){
+				this.authHandler(null, {user});
+			}
+		})
 	}
 
 	handleChange(e, key){
@@ -25,12 +34,39 @@ class Inventory extends React.Component {
 	}
 
 	authenticate(provider){
-		console.log(`trying to authenticate with ${provider}`)
 		base.authWithOAuthPopup(provider, this.authHandler);
 	}
 
+	logout(){
+		base.unauth();
+		this.setState({
+			uid: null
+		})
+	}
+
 	authHandler(err, authData){
-		console.log(authData);
+		if(err){
+			console.log(err);
+			return;
+		}
+
+		const storeRef = base.database().ref(this.props.storeId);
+
+		storeRef.once('value', (spanshot) => {
+			const data = spanshot.val() || {};
+
+			if(!data.owner){
+				storeRef.set({
+					owner: authData.user.uid
+				});
+			}
+
+			this.setState({
+				uid: authData.user.uid,
+				owner: data.owner || authData.user.uid
+			});
+		})
+
 	}
 
 	renderLogin(){
@@ -70,7 +106,7 @@ class Inventory extends React.Component {
 
 	render (){
 
-		const logout = <button>Log Out !</button>;
+		const logout = <button onClick={this.logout}>Log Out !</button>;
 
 		//Verify not login
 		if(!this.state.uid){
@@ -81,30 +117,31 @@ class Inventory extends React.Component {
 			return (
 				<div>
 					<p>Sorry you aren't the owner of this store!</p>
+					{logout}
 				</div>
 				)
 		}
 
 		return (
 			<div>
-				<p>Inventory</p>
+				<h2>Inventory</h2>
+				{logout}
 				{Object.keys(this.props.fishes).map(this.renderInventory)}
 				<AddFishForm addFish={this.props.addFish} addToOrder={this.props.addToOrder}/>
 				<button onClick={this.props.loadSamples}>Load Sample Fishes</button>
 			</div>
 		)
 	}
-}
 
-const Types = React.PropTypes;
-
-Inventory.propTypes = {
-	fishes: Types.object.isRequired,
-	addFish: Types.func.isRequired,
-	addToOrder: Types.func.isRequired,
-	loadSamples: Types.func.isRequired,
-	removeFish: Types.func.isRequired,
-	updateFish: Types.func.isRequired
+	static propTypes = {
+		fishes: React.PropTypes.object.isRequired,
+		addFish: React.PropTypes.func.isRequired,
+		addToOrder: React.PropTypes.func.isRequired,
+		loadSamples: React.PropTypes.func.isRequired,
+		removeFish: React.PropTypes.func.isRequired,
+		updateFish: React.PropTypes.func.isRequired,
+		storeId: React.PropTypes.string.isRequired
+	};
 }
 
 export default Inventory;
