@@ -13,7 +13,7 @@ pipeline {
     }
     stage('Update S3') {
       steps {
-        sh 'cd build && aws s3 sync build/ s3://catchoftheday.latitude25.ca '
+        sh 'aws s3 sync build/ s3://catchoftheday.latitude25.ca '
       }
     }
   }
