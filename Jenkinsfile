@@ -16,10 +16,5 @@ pipeline {
         sh 'cd build && aws s3 sync build/ s3://catchoftheday.latitude25.ca '
       }
     }
-    stage('Invalidate CDN') {
-      steps {
-        sh 'aws cloudfront create-invalidation --distribution-id E3Q7DSOG87LL2L'
-      }
-    }
   }
 }
