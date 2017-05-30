@@ -1,9 +1,14 @@
 pipeline {
   agent none
   stages {
-    stage('Initialize') {
+    stage('Clear Packages') {
       steps {
-        echo 'Simple pipeline'
+        sh 'rm -rf node_modules'
+      }
+    }
+    stage('Build') {
+      steps {
+        sh 'npm install'
       }
     }
   }
