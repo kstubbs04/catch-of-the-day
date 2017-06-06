@@ -1,16 +1,16 @@
 import React from 'react';
-import {formatPrice} from '../helpers';
+import { formatPrice } from '../helpers';
 
 class Fish extends React.Component {
 
-	render(){
+    render() {
 
-		const details = this.props.details;
-		const isAvailable = details.status === 'available';
-		const text = isAvailable ? 'Add To Order' : 'Sold Out';
+        const details = this.props.details;
+        const isAvailable = details.status === 'available';
+        const text = isAvailable ? 'Add To Order' : 'Sold Out';
 
-		return (
-			<li className="menu-fish">
+        return (
+            <li className="menu-fish">
 				<img src={details.image} alt={details.name}/>
 				<h3 className="fish-name">
 				{details.name}
@@ -19,16 +19,16 @@ class Fish extends React.Component {
 				<p>{details.desc}</p>
 				<button disabled={!isAvailable} onClick={() => this.props.addToOrder(this.props.index)}>{text}</button>
 			</li>
-			)
-	}
+        )
+    }
 }
 
 const Types = React.PropTypes;
 
 Fish.propTypes = {
-	addToOrder: Types.func.isRequired,
-	index: Types.string.isRequired,
-	details: Types.object.isRequired
+    addToOrder: Types.func.isRequired,
+    index: Types.string.isRequired,
+    details: Types.object.isRequired
 }
 
 export default Fish;
