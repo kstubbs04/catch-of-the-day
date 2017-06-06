@@ -1,6 +1,11 @@
 # Catch Of The Day
 
-This is an introductory project to using reactjs.  The course is taught by [Wesbos][wesbos1] and is available [here][wesbos2]
+This is an introductory project to using reactjs.  
+The course is taught by [Wesbos][wesbos1] and is available [here][wesbos2]
+
+Staging: [![Build Status](http://jenkins.latitude25.ca/job/Catch Of The Day (Staging)/badge/icon)](http://jenkins.latitude25.ca/job/Catch Of The Day (Staging))
+
+Production: [![Build Status](http://jenkins.latitude25.ca/job/Catch Of The Day (Staging)/badge/icon)](http://jenkins.latitude25.ca/job/Catch Of The Day (Production))
 
 #### Framework 
   - [ReactJs](https://facebook.github.io/react/)
