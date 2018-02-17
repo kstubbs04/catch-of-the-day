@@ -10,13 +10,13 @@ script:
 deploy:
   provider: gae
   skip_cleanup: true
-  keyfile: google-cloud-secret.json
+  keyfile: service-account.json
   project: catch-of-the-day-platform
   default: true
   on:
     all_branches: true
 before_install:
 - openssl aes-256-cbc -K $encrypted_82bc60b1bcae_key -iv $encrypted_82bc60b1bcae_iv
-  -in google-cloud-secret.json.enc -out google-cloud-secret.json -d
-- tar -xzf google-cloud-secret.json
+  -in service-account.json.enc -out service-account.json -d
+- tar -xzf service-account.json
 - mkdir -p lib
