@@ -1,16 +1,19 @@
 language: node_js
 node_js:
-  - "stable"
+- stable
 cache:
   directories:
   - node_modules
 script:
-  - npm test
-  - npm run build
+- npm test
+- npm run build
 deploy:
   provider: pages
   skip_cleanup: true
-  github_token: $github_token
+  github_token: "$github_token"
   local_dir: build
   on:
     branch: master
+before_install:
+- openssl aes-256-cbc -K $encrypted_82bc60b1bcae_key -iv $encrypted_82bc60b1bcae_iv
+  -in google-cloud-secret.json.enc -out google-cloud-secret.json -d
