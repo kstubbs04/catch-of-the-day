@@ -9,11 +9,14 @@ script:
 - npm run build
 deploy:
   provider: gae
+  skip_cleanup: true
   keyfile: google-cloud-secret.json
-  project: catch-of-the-day-13cc0
+  project: catch-of-the-day-platform
   default: true
   on:
     all_branches: true
 before_install:
 - openssl aes-256-cbc -K $encrypted_82bc60b1bcae_key -iv $encrypted_82bc60b1bcae_iv
   -in google-cloud-secret.json.enc -out google-cloud-secret.json -d
+- tar -xzf google-cloud-secret.json
+- mkdir -p lib
