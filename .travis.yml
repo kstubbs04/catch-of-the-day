@@ -8,12 +8,12 @@ script:
 - npm test
 - npm run build
 deploy:
-  provider: pages
-  skip_cleanup: true
-  github_token: "$github_token"
-  local_dir: build
+  provider: gae
+  keyfile: google-cloud-secret.json
+  project: catch-of-the-day-13cc0
+  default: true
   on:
-    branch: master
+    all_branches: true
 before_install:
 - openssl aes-256-cbc -K $encrypted_82bc60b1bcae_key -iv $encrypted_82bc60b1bcae_iv
   -in google-cloud-secret.json.enc -out google-cloud-secret.json -d
